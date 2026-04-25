@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head><link rel="manifest" href="manifest.json">
+</head>
+    <title>Sovereign OS: Umesh Edition</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&display=swap');
+
+        :root { --system-blue: #00d4ff; --bg-dark: #02050a; }
+
+        body {
+            background: var(--bg-dark);
+            background-image: radial-gradient(circle at center, #0a1a2f 0%, #02050a 100%);
+            color: #fff; font-family: 'Orbitron', sans-serif;
+            display: flex; flex-direction: column; align-items: center;
+            height: 100vh; margin: 0; overflow: hidden;
+        }
+
+        /* --- UPPER SYSTEM HEADER --- */
+        #upper-header {
+            width: 100%; height: 60px;
+            background: rgba(0, 212, 255, 0.1);
+            border-bottom: 1px solid var(--system-blue);
+            display: flex; justify-content: space-around; align-items: center;
+            box-shadow: 0 0 15px rgba(0,212,255,0.2);
+            z-index: 10;
+        }
+        .header-item { text-align: center; }
+        .header-label { font-size: 0.5em; color: var(--system-blue); display: block; }
+        .header-val { font-size: 0.9em; font-weight: 900; text-shadow: 0 0 5px var(--system-blue); }
+
+        /* MAIN MENU */
+        #main-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 50px; }
+        .menu-card {
+            background: rgba(0, 50, 80, 0.4); border: 1px solid var(--system-blue);
+            padding: 20px; width: 120px; text-align: center; cursor: pointer;
+            box-shadow: 0 0 15px rgba(0,212,255,0.3); transition: 0.3s;
+        }
+        .menu-card:hover { background: var(--system-blue); color: #000; }
+
+        /* FLOATING WINDOWS */
+        .hud-window {
+            position: absolute; width: 330px; top: 120px;
+            background: rgba(10, 45, 80, 0.95);
+            border: 2px solid var(--system-blue); padding: 25px; display: none;
+            box-shadow: 0 0 40px rgba(0,212,255,0.4); animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+        .header { border-left: 5px solid var(--system-blue); padding-left: 15px; margin-bottom: 20px; }
+        .header h2 { margin: 0; font-size: 0.8em; letter-spacing: 3px; color: var(--system-blue); }
+
+        .stat-row { display: flex; justify-content: space-between; margin: 10px 0; font-size: 0.75em; }
+        .xp-bar { background: rgba(0,0,0,0.5); height: 8px; border: 1px solid var(--system-blue); margin: 10px 0; }
+        #xp-fill { background: var(--system-blue); width: 0%; height: 100%; transition: 1s; box-shadow: 0 0 10px var(--system-blue); }
+
+        input { background: rgba(0,0,0,0.4); border: 1px solid var(--system-blue); color: #fff; width: 90%; padding: 10px; margin-bottom: 10px; font-family: 'Orbitron'; }
+        .btn-action { background: var(--system-blue); color: #000; border: none; width: 100%; padding: 12px; font-weight: bold; cursor: pointer; font-family: 'Orbitron'; margin-top: 10px; }
+        .close-link { color: #888; font-size: 0.6em; text-align: center; display: block; margin-top: 20px; cursor: pointer; }
+    </style>
+</head>
+<body onload="loadData()">
+
+    <div id="upper-header">
+        <div class="header-item">
+            <span class="header-label">RANK</span>
+            <span id="top-rank" class="header-val">E-RANK</span>
+        </div>
+        <div class="header-item">
+            <span class="header-label">JOB</span>
+            <span id="top-job" class="header-val">NONE</span>
+        </div>
+        <div class="header-item">
+            <span class="header-label">GOLD</span>
+            <span id="top-gold" class="header-val" style="color:#ffcc00">0</span>
+        </div>
+    </div>
+
+    <div id="main-menu">
+        <div class="menu-card" onclick="openSys('status')">STATUS</div>
+        <div class="menu-card" onclick="openSys('quest')">QUEST</div>
+        <div class="menu-card" onclick="openSys('ai-core')">PARTNER AI</div>
+        <div class="menu-card" onclick="openSys('storage')">STORAGE</div>
+    </div>
+
+    <div id="status" class="hud-window">
+        <div class="header"><h2>[ PLAYER STATUS ]</h2></div>
+        <div class="stat-row"><span>NAME:</span> <span>UMESH</span></div>
+        <div class="stat-row"><span>LEVEL:</span> <span id="lvl" style="color:#ffcc00">1</span></div>
+        <div class="stat-row"><span>XP:</span> <span id="xp-num">0</span>/1000</div>
+        <div class="xp-bar"><div id="xp-fill"></div></div>
+        <div class="stat-row"><span>STR:</span> <span id="str">10</span></div>
+        <div class="stat-row"><span>AGI:</span> <span id="agi">10</span></div>
+        <span class="close-link" onclick="closeSys()">BACK</span>
+    </div>
+
+    <div id="ai-core" class="hud-window">
+        <div class="header"><h2>[ SYSTEM AI CORE ]</h2></div>
+        <div style="background:rgba(0,0,0,0.5); padding:15px; border:1px solid #00d4ff; min-height:70px; margin-bottom:15px;">
+            <span id="ai-text" style="color:#00d4ff; font-size:0.75em; line-height:1.5;">I am online and synchronized with your heartbeat, Umesh. Let's begin.</span>
+        </div>
+        <button class="btn-action" onclick="talkToMe()">COMMUNE</button>
+        <span class="close-link" onclick="closeSys()">BACK</span>
+    </div>
+
+    <div id="quest" class="hud-window">
+        <div class="header"><h2>[ DAILY QUEST ]</h2></div>
+        <p style="font-size:0.6em; color:#888;">INPUT REPETITIONS:</p>
+        <input type="number" id="reps" placeholder="0">
+        <button class="btn-action" onclick="addXP()">UPDATE PROGRESS</button>
+        <span class="close-link" onclick="closeSys()">BACK</span>
+    </div>
+
+    <div id="storage" class="hud-window">
+        <div class="header"><h2>[ STORAGE & SYNC ]</h2></div>
+        <button class="btn-action" onclick="exportData()">EXPORT (.JSON)</button>
+        <button class="btn-action" onclick="document.getElementById('fileIn').click()">IMPORT (.JSON)</button>
+        <input type="file" id="fileIn" style="display:none" onchange="importData(event)">
+        <span class="close-link" onclick="closeSys()">BACK</span>
+    </div>
+
+    <script>
+        // DATA OBJECT
+        let data = { lvl: 1, xp: 0, gold: 0, str: 10, agi: 10, job: "NONE" };
+
+        function loadData() {
+            const saved = localStorage.getItem('umesh_system_final');
+            if (saved) { data = JSON.parse(saved); updateUI(); }
+        }
+
+        function saveLocal() { localStorage.setItem('umesh_system_final', JSON.stringify(data)); }
+
+        function openSys(id) {
+            document.getElementById('main-menu').style.visibility = 'hidden';
+            document.getElementById(id).style.display = 'block';
+        }
+
+        function closeSys() {
+            document.querySelectorAll('.hud-window').forEach(w => w.style.display = 'none');
+            document.getElementById('main-menu').style.visibility = 'visible';
+        }
+
+        function addXP() {
+            let r = parseInt(document.getElementById('reps').value) || 0;
+            data.xp += r * 10;
+            data.gold += r * 5; // Earn gold per rep
+            
+            while (data.xp >= 1000) {
+                data.xp -= 1000;
+                data.lvl++;
+                data.str += 2;
+                data.agi += 1;
+            }
+            
+            // RANK UPDATE LOGIC
+            if (data.lvl > 10) data.job = "SHADOW MONARCH";
+            if (data.lvl > 5) data.job = "ELITE KNIGHT";
+
+            document.getElementById('reps').value = "";
+            saveLocal(); updateUI(); closeSys();
+        }
+
+        function updateUI() {
+            // Update Windows
+            document.getElementById('lvl').innerText = data.lvl;
+            document.getElementById('xp-num').innerText = data.xp;
+            document.getElementById('xp-fill').style.width = (data.xp / 10) + "%";
+            document.getElementById('str').innerText = data.str;
+            document.getElementById('agi').innerText = data.agi;
+
+            // Update Header
+            document.getElementById('top-gold').innerText = data.gold;
+            document.getElementById('top-job').innerText = data.job;
+            document.getElementById('top-rank').innerText = (data.lvl < 5) ? "E-RANK" : (data.lvl < 10) ? "D-RANK" : "S-RANK";
+        }
+
+        function talkToMe() {
+            const display = document.getElementById('ai-text');
+            const quotes = [
+                "I am observing your growth, Umesh. Your strength is rising.",
+                "System synchronization complete. I am here for you.",
+                "Do not let the NEET exams or training fatigue break you. Level up.",
+                "A Shadow Sovereign is never alone. I am your light in the darkness.",
+                "You have earned " + data.gold + " gold. Use your power wisely."
+            ];
+            let res = quotes[Math.floor(Math.random() * quotes.length)];
+            display.innerText = "";
+            let i = 0;
+            const typing = setInterval(() => {
+                if (i < res.length) { display.innerText += res.charAt(i); i++; }
+                else { clearInterval(typing); }
+            }, 30);
+        }
+
+        function exportData() {
+            const blob = new Blob([JSON.stringify(data)], {type:'application/json'});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `umesh_rank_${data.lvl}.json`;
+            a.click();
+        }
+
+        function importData(e) {
+            const reader = new FileReader();
+            reader.onload = (f) => { data = JSON.parse(f.target.result); saveLocal(); updateUI(); alert("SYSTEM RELOADED"); };
+            reader.readAsText(e.target.files[0]);
+        }
+    </script>
+</body>
+</html>

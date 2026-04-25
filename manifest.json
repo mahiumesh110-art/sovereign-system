@@ -1,0 +1,17 @@
+{
+  "name": "Sovereign OS: Umesh Edition",
+  "short_name": "Sovereign",
+  "description": "The official leveling system for the Shadow Monarch.",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#02050a",
+  "theme_color": "#00d4ff",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1157/1157109.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
